@@ -296,7 +296,7 @@ const updateBookDetails = async function (req, res) {
           }
 
           if(req.userId!=Deletbook.userId){
-            return res.status(400).send({status:false,message:"you are not authorized"})
+            return res.status(403).send({status:false,message:"you are not authorized"})
           }
       
           
