@@ -23,7 +23,7 @@ const createReview = async function (req, res) {
     try {
 
         let requestBody = req.body
-        const { rating, reviewedBy } = requestBody
+        const { rating, reviewedBy} = requestBody
         let bookId = req.params.bookId
 
         if (!isValid(bookId)) {
@@ -34,14 +34,14 @@ const createReview = async function (req, res) {
         }
 
         if (!isValidObjectId(bookId)) {
-            return res.status(400).send({
+            return res.status(404).send({
                 status: false,
                 message: "please provide valid bookId"
             })
         }
 
         if (!isValidRequestBody(requestBody)) {
-            return res.status(400).send({
+            return res.status(404).send({
                 status: false,
                 message: "please provide input via body"
             })
@@ -53,10 +53,11 @@ const createReview = async function (req, res) {
                 message: "please provide rating"
             })
         }
-
+        if(reviewedBy!=undefined){
        if(reviewedBy.trim().length === 0){
         requestBody["reviewedBy"] = "Guest"
        }
+    }
 
 
 
@@ -99,7 +100,7 @@ const createReview = async function (req, res) {
 
 
         res.status(201).send({
-            status: true, data: {
+            status: true, reviewData: {
                 "_id": reviewData._id,
                 "bookId": reviewData.bookId,
                 "reviewedBy": reviewData.reviewedBy,
@@ -140,13 +141,13 @@ const updateReview = async function (req, res) {
 
 
         if (!isValidObjectId(bookId)) {
-            return res.status(400).send({
+            return res.status(404).send({
                 status: false,
                 message: "please provide valid bookId"
             })
         }
         if (!isValidObjectId(reviewId)) {
-            return res.status(400).send({
+            return res.status(404).send({
                 status: false,
                 message: "please provide valid reviewId"
             })
@@ -199,7 +200,7 @@ const updateReview = async function (req, res) {
 
 
 
-        return res.status(200).send({ status: true, message: "success", data: updatedReview })
+        return res.status(200).send({ status: true, message: "successfully updated", data: updatedReview })
 
 
 
@@ -235,10 +236,10 @@ const deleteReview = async function (req, res) {
 
 
         if (!isValidObjectId(bookId)) {
-            return res.status(400).send({ status: false, message: "please provide valid bookId" })
+            return res.status(404).send({ status: false, message: "please provide valid bookId" })
         }
         if (!isValidObjectId(reviewId)) {
-            return res.status(400).send({ status: false, message: "please provide valid reviewId" })
+            return res.status(404).send({ status: false, message: "please provide valid reviewId" })
         }
 
 
@@ -248,7 +249,7 @@ const deleteReview = async function (req, res) {
 
 
             if (isReviewIdExist.isDeleted === true) {
-                return res.status(400).send({ status: false, message: "review already deleted" })
+                return res.status(404).send({ status: false, message: "review already deleted" })
             }
 
 
@@ -272,7 +273,7 @@ const deleteReview = async function (req, res) {
         }
 
 
-        return res.status(200).send({ status: true, message: "review successfully deleted" })
+        return res.status(200).send({ status: true, message: "review successfully deleted" ,data:updateisDeleted })
 
 
     } catch (err) {

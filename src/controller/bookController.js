@@ -29,7 +29,7 @@ const isValidRequestBody = function (data) {
       let {title,excerpt,userId,ISBN,category,subcategory,releasedAt}=data
 
       if (!isValidRequestBody(data)) {
-        res.status(400).send({ status: false, msg: 'please provide valid  details' })
+        res.status(404).send({ status: false, msg: 'please provide valid  details' })
         return
       }
   
@@ -88,7 +88,7 @@ const isValidRequestBody = function (data) {
       }
 
     if(req.userId!=data.userId){
-      return res.status(400).send({status:false,msg:"you are not authorized"})
+      return res.status(403).send({status:false,msg:"you are not authorized"})
     }
   
       let  Title= await bookModel.findOne({ title })
@@ -138,7 +138,7 @@ const isValidRequestBody = function (data) {
         if(data.userId){
     
           if(!isValidObjectId(data.userId)) {      
-            res.status(400).send({status: false, message:"userId is not valid"})
+            res.status(404).send({status: false, message:"userId is not valid"})
             return
            }
       
@@ -168,7 +168,7 @@ const isValidRequestBody = function (data) {
             return res.status(400).send({ status: false, message: "please provide bookId" })
         }
         if (!isValidObjectId(bookId)) {
-            return res.status(400).send({ status: false, message: "please provide valid bookId" })
+            return res.status(404).send({ status: false, message: "please provide valid bookId" })
         }
 
         const bookIdData = await bookModel.findById({ _id: bookId }).select({ __v: 0 }).lean()
@@ -212,7 +212,7 @@ const updateBookDetails = async function (req, res) {
           return res.status(400).send({ status: false, message: "please provide bookId" })
       }
       if (!isValidObjectId(bookId)) {
-          return res.status(400).send({ status: false, message: "please provide valid bookId" })
+          return res.status(404).send({ status: false, message: "please provide valid bookId" })
       }
 
       if (!isValidRequestBody(requestBody)) {
@@ -288,6 +288,12 @@ const updateBookDetails = async function (req, res) {
       const deleteBooksBYId = async function (req, res) {
         try {
           let bookId = req.params.bookId
+       
+      if (!isValidObjectId(bookId)) {
+        res.status(404).send({ status: false, msg: "bookId is not valid" })
+        return
+
+      }
       
           let Deletbook = await bookModel.findOne({ _id: bookId, isDeleted: false })
       

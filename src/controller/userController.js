@@ -33,7 +33,7 @@ const createUser = async function (req, res) {
             return
         }
         if (!isValidTitle(title)) {
-            res.status(400).send({ status: false, msg: "Title should be only with Mr, Mrs and Miss" })
+            res.status(404).send({ status: false, msg: "Title should be only with Mr, Mrs and Miss" })
             return
         }
         if (!isValid(email)) {
@@ -41,7 +41,7 @@ const createUser = async function (req, res) {
             return
         }
         if (!(/^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/.test(email))) {
-            res.status(400).send({ status: false, msg: "Invalid Email" })
+            res.status(404).send({ status: false, msg: "Invalid Email" })
             return
         }
        
@@ -69,6 +69,7 @@ const createUser = async function (req, res) {
             res.status(400).send({status:false,msg:"address is required"})
             return
         }
+  
        
         let isEmailAlreadyUsed = await userModel.findOne({ email })
         if (isEmailAlreadyUsed) {
